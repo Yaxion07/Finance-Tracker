@@ -208,3 +208,5 @@ __marimo__/
 
 # Node modules
 node_modules/
+
+docs/
