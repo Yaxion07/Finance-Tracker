@@ -28,8 +28,9 @@ class Transaction(Base):
     )
 
     # Relationship to the User model
-    user = relationship("User", back_populates="transactions")
-    category = relationship("Category", back_populates="transactions", lazy="joined", uselist=False)
+    user = relationship("app.models.user.User", back_populates="transactions")
+    category = relationship("app.models.category.Category", back_populates="transactions",
+                            lazy="joined", uselist=False)
 
     # Index for faster querying by user and date
     __table_args__ = (

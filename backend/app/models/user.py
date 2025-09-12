@@ -12,11 +12,10 @@ class User(Base):
     created_at = Column(DateTime(timezone=True), server_default=func.now()) # Sets the default date to current time
 
     transactions = relationship(
-        "Transaction",
+        "app.models.transaction.Transaction", # Makes sure to use the full path to avoid circular imports
         back_populates="user",
         cascade="all, delete-orphan",
         passive_deletes=True
     )
 
     
-
