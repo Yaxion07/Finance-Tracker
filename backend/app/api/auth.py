@@ -31,7 +31,7 @@ def register_user(payload: UserCreateSchema, db: Session = Depends(get_db)):
 @router.post("/login", response_model=TokenSchema)
 def login(payload: UserLoginSchema, db: Session = Depends(get_db)):
     user = db.execute(select(User).where(User.email == payload.email)).scalar_one_or_none()
-    if not user or not verify_password:
+    if not user or not verify_password(payload.password, user.password_hash):
         raise HTTPException(
             status_code=401, 
             detail="Could not find user, invalid email or password",
@@ -42,9 +42,12 @@ def login(payload: UserLoginSchema, db: Session = Depends(get_db)):
     access_token = create_access_token(
     data={"sub": str(user.id)},
     expires_delta=access_token_expires
-)
+    )
     return {"access_token": access_token, "token_type": "bearer"}
-    
 
+# No-op endpoint. Client has to invalidate token manually through frontend.
+@router.delete("/logout", status_code=status.HTTP_204_NO_CONTENT)
+def logout():
+    return {"message": "Logged out successfully"}
     
     
